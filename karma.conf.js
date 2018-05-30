@@ -1,8 +1,10 @@
 // Karma configuration
 // Generated on Tue May 29 2018 15:03:59 GMT-0400 (EDT)
 
-module.exports = function(config) {
-  config.set({
+module.exports = (config) => {
+  var testWebpackConfig = require('./config/webpack.test.js')({env: 'test'});
+
+  var karmaConfig = {
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
@@ -15,21 +17,33 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '"src/*.ts"',
-      'src/*.spec.ts'
+      { pattern: './config/spec-bundle.js', watched: false }
     ],
+
+    // files: [
+    //   'src/**/*.spec.ts'
+    // ],
 
 
     // list of files / patterns to exclude
     exclude: [
     ],
 
+    // mime: {
+    //   'text/x-typescript': ['ts','tsx']
+    // },
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-    },
+    preprocessors: { './config/spec-bundle.js': ['coverage', 'webpack', 'sourcemap'] },
 
+    // preprocessors: {
+    //   'src/**/*.spec.ts': ['coverage', 'webpack', 'sourcemap']
+    // },
+
+    webpack: testWebpackConfig,
+
+    webpackMiddleware: { stats: 'errors-only'},
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
@@ -51,7 +65,7 @@ module.exports = function(config) {
 
 
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
+    autoWatch: false,
 
 
     // start these browsers
@@ -61,10 +75,12 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
+    singleRun: true,
 
     // Concurrency level
     // how many browser should be started simultaneous
     concurrency: Infinity
-  })
+  };
+
+  config.set(karmaConfig);
 }

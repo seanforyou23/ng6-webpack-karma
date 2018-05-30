@@ -38,7 +38,4 @@ describe('App Component - ', () => {
     expect(fixture).toBeTruthy();
   });
 
-  it('should set a custom tooltip placement', () => {
-    expect(1).toBeTruthy();
-  });
 });
