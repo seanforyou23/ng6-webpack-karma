@@ -10,15 +10,12 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
-const TypedocWebpackPlugin = require('typedoc-webpack-plugin');
 
 // ExtractTextPlugin
 const extractCSS = new ExtractTextPlugin({
   filename: '[name].[id].css',
   allChunks: true
 });
-
-const aotMode = true;
 
 module.exports = {
   devServer: {
@@ -31,7 +28,7 @@ module.exports = {
   entry: {
     'polyfills': './src/polyfills.ts',
     'vendor': './src/vendor.ts',
-    'app': aotMode ? './src/demo-aot.ts' : './src/demo.ts'
+    'app': './src/demo-aot.ts'
   },
 
   mode: 'development',
@@ -49,11 +46,8 @@ module.exports = {
     rules: [
       {
         test: /\.ts$/,
-        use: aotMode ? [
+        use: [
           '@ngtools/webpack'
-        ] : [
-          'awesome-typescript-loader',
-          'angular2-template-loader'
         ],
         exclude: [/\.(spec|e2e)\.ts$/]
       },
@@ -181,6 +175,11 @@ module.exports = {
   },
 */
   plugins: [
+    new AotPlugin({
+      entryModule: helpers.root('src/demo/app.module.ts#AppModule'),
+      tsConfigPath: helpers.root('tsconfig-aot.json')
+    }),
+
     extractCSS,
 
     /*
@@ -217,17 +216,6 @@ module.exports = {
       helpers.root('src') // location of your src
     ),
 
-    // new TypedocWebpackPlugin({
-    //   name: 'Minimal NG',
-    //   mode: 'file',
-    //   includeDeclarations: false,
-    //   ignoreCompilerErrors: true,
-    //   excludePrivate: true,
-    //   excludeProtected: true,
-    //   exclude: ['**/+(example|demo)/**', '**/+(demo-aot)**'],
-    //   tsconfig: 'tsconfig.json'
-    // }, './src'),
-
     /**
      * Plugin: copy-webpack-plugin
      * Description: Copies individual files or entire directories to the build directory
@@ -239,16 +227,3 @@ module.exports = {
     }])
   ]
 };
-
-/**
- * Plugin: AotPlugin
- * Description: Angular Ahead-of-Time Webpack Plugin
- *
- * See: https://www.npmjs.com/package/@ngtools/webpack
- */
-if (aotMode) {
-  module.exports.plugins.push(new AotPlugin({
-    entryModule: helpers.root('src/demo/app.module.ts#AppModule'),
-    tsConfigPath: helpers.root('tsconfig-aot.json')
-  }));
-}

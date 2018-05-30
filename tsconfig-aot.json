@@ -13,7 +13,6 @@
   },
   "files": [
     "src/demo/app.module.ts",
-    "src/demo.ts",
     "src/demo-aot.ts",
     "src/polyfills.ts",
     "src/vendor.ts"
