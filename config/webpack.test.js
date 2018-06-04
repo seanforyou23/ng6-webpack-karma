@@ -91,14 +91,14 @@ module.exports = function (options) {
         },
 
         /**
-         * Typescript loader support for .ts and Angular 2 async routes via .async.ts
+         * Typescript loader support for .ts and Angular 2+ async routes via .async.ts
          *
-         * See: https://github.com/s-panferov/awesome-typescript-loader
+         * See: https://github.com/TypeStrong/ts-loader
          */
         {
           test: /\.ts$/,
           use: [
-            'awesome-typescript-loader',
+            'ts-loader',
             'angular2-template-loader'
           ],
           exclude: [/\.e2e\.ts$/]
